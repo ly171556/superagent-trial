@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hello World · 精美演示页</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --text: #f5f7ff;
+    --text-dim: rgba(245, 247, 255, 0.65);
+    --card-bg: rgba(255, 255, 255, 0.08);
+    --card-border: rgba(255, 255, 255, 0.18);
+    --glow: rgba(139, 92, 246, 0.55);
+  }
+
+  html.light {
+    --text: #1b1e2b;
+    --text-dim: rgba(27, 30, 43, 0.6);
+    --card-bg: rgba(255, 255, 255, 0.6);
+    --card-border: rgba(27, 30, 43, 0.1);
+    --glow: rgba(139, 92, 246, 0.35);
+  }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: #0b0d1a;
+    color: var(--text);
+    overflow: hidden;
+    transition: color 0.5s;
+  }
+
+  /* 动态渐变背景 */
+  .aurora {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(120deg, #1e1b4b, #0b0d1a 40%, #0f2027);
+    z-index: -3;
+  }
+  .blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.55;
+    z-index: -2;
+    animation: drift 18s ease-in-out infinite alternate;
+  }
+  .blob.b1 { width: 44vmax; height: 44vmax; left: -12vmax; top: -14vmax; background: #7c3aed; }
+  .blob.b2 { width: 38vmax; height: 38vmax; right: -10vmax; top: 6vmax; background: #06b6d4; animation-delay: -6s; animation-duration: 22s; }
+  .blob.b3 { width: 40vmax; height: 40vmax; left: 20vmax; bottom: -18vmax; background: #ec4899; animation-delay: -12s; animation-duration: 26s; }
+  html.light .blob { opacity: 0.4; }
+  html.light .aurora { background: linear-gradient(120deg, #eef2ff, #fdf4ff 45%, #ecfeff); }
+
+  @keyframes drift {
+    0%   { transform: translate(0, 0) scale(1); }
+    50%  { transform: translate(6vmax, -4vmax) scale(1.12); }
+    100% { transform: translate(-4vmax, 5vmax) scale(0.95); }
+  }
+
+  /* 星点 */
+  .stars { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+  .stars span {
+    position: absolute;
+    width: 3px; height: 3px;
+    background: #fff;
+    border-radius: 50%;
+    opacity: 0.7;
+    animation: twinkle 3s ease-in-out infinite;
+  }
+  html.light .stars span { background: #6366f1; }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.15; transform: scale(0.8); }
+    50%      { opacity: 0.9;  transform: scale(1.3); }
+  }
+
+  .card {
+    position: relative;
+    width: min(680px, 90vw);
+    padding: clamp(2rem, 6vw, 3.5rem);
+    text-align: center;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 28px;
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(36px) scale(0.97); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 0.4rem 1.1rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    border: 1px solid var(--card-border);
+    background: rgba(255, 255, 255, 0.06);
+    margin-bottom: 1.6rem;
+  }
+
+  h1 {
+    font-size: clamp(2.6rem, 9vw, 5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    background: linear-gradient(92deg, #a78bfa 0%, #22d3ee 45%, #f472b6 90%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 1.1rem;
+  }
+
+  .subtitle {
+    font-size: clamp(1rem, 2.6vw, 1.2rem);
+    color: var(--text-dim);
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+  html:not(.light) .subtitle { color: var(--text-dim); }
+
+  .cursor {
+    display: inline-block;
+    width: 3px;
+    height: 1.1em;
+    background: #22d3ee;
+    vertical-align: -0.15em;
+    margin-left: 4px;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .features {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 2.2rem;
+  }
+  .chip {
+    padding: 0.45rem 1rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--card-border);
+    color: var(--text-dim);
+    transition: transform 0.25s, border-color 0.25s, color 0.25s;
+    cursor: default;
+  }
+  .chip:hover { transform: translateY(-3px); border-color: #a78bfa; color: var(--text); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 2rem;
+    border: none;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    background: linear-gradient(92deg, #7c3aed, #06b6d4);
+    box-shadow: 0 10px 30px var(--glow);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 14px 40px var(--glow); }
+  .btn:active { transform: translateY(0); }
+
+  .toggle {
+    position: fixed;
+    top: 1.2rem;
+    right: 1.2rem;
+    z-index: 10;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--card-border);
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    color: var(--text);
+    font-size: 1.15rem;
+    cursor: pointer;
+    transition: transform 0.25s;
+  }
+  .toggle:hover { transform: rotate(20deg) scale(1.08); }
+
+  .confetti {
+    position: fixed;
+    width: 10px; height: 10px;
+    z-index: 20;
+    pointer-events: none;
+    animation: fall 1.6s ease-in forwards;
+  }
+  @keyframes fall {
+    to { transform: translateY(70vh) rotate(540deg); opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.001s !important; }
+  }
+</style>
+</head>
+<body>
+  <div class="aurora"></div>
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+  <div class="stars" id="stars"></div>
+
+  <button class="toggle" id="themeToggle" title="切换主题" aria-label="切换主题">🌙</button>
+
+  <main class="card">
+    <span class="badge">✨ Demo · Hello World</span>
+    <h1>Hello, World<span class="cursor"></span></h1>
+    <p class="subtitle" id="typed">你好，世界！这是一张精美的演示页面。</p>
+
+    <div class="features">
+      <span class="chip">🎨 渐变玻璃卡片</span>
+      <span class="chip">🌌 动态光斑背景</span>
+      <span class="chip">🌗 深浅色主题</span>
+      <span class="chip">🎉 点击庆祝</span>
+    </div>
+
+    <button class="btn" id="partyBtn">🎉 点我庆祝</button>
+  </main>
+
+<script>
+  // 星点背景
+  const stars = document.getElementById('stars');
+  for (let i = 0; i < 60; i++) {
+    const s = document.createElement('span');
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 100 + '%';
+    s.style.animationDelay = (Math.random() * 3) + 's';
+    s.style.animationDuration = (2 + Math.random() * 3) + 's';
+    stars.appendChild(s);
+  }
+
+  // 打字机效果
+  const typedEl = document.getElementById('typed');
+  const message = '你好，世界！这是一张精美的演示页面。';
+  typedEl.textContent = '';
+  let ti = 0;
+  (function type() {
+    if (ti < message.length) {
+      typedEl.textContent += message[ti++];
+      setTimeout(type, 90);
+    }
+  })();
+
+  // 主题切换
+  const toggle = document.getElementById('themeToggle');
+  toggle.addEventListener('click', () => {
+    const light = document.documentElement.classList.toggle('light');
+    toggle.textContent = light ? '☀️' : '🌙';
+  });
+
+  // 庆祝彩带
+  const colors = ['#a78bfa', '#22d3ee', '#f472b6', '#facc15', '#4ade80'];
+  document.getElementById('partyBtn').addEventListener('click', () => {
+    for (let i = 0; i < 40; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.left = 20 + Math.random() * 60 + 'vw';
+      c.style.top = '38vh';
+      c.style.background = colors[i % colors.length];
+      c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      c.style.animationDelay = Math.random() * 0.3 + 's';
+      c.style.animationDuration = 1.2 + Math.random() + 's';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 2600);
+    }
+  });
+</script>
+</body>
+</html>
